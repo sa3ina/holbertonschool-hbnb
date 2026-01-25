@@ -1,0 +1,69 @@
+## User Registration
+sequenceDiagram
+participant User
+participant API
+participant Facade
+participant Database
+
+User->>API: POST /users (registration data)
+API->>Facade: create_user(data)
+Facade->>Database: insert User
+Database-->>Facade: user_id
+Facade-->>API: User created
+API-->>User: 201 Created
+
+## Place Creation
+sequenceDiagram
+participant User
+participant API
+participant Facade
+participant Database
+
+User->>API: POST /places
+API->>Facade: create_place(user_id, data)
+Facade->>Database: insert Place
+Database-->>Facade: place_id
+Facade-->>API: Place created
+API-->>User: 201 Created
+
+## Review Submission
+sequenceDiagram
+participant User
+participant API
+participant Facade
+participant Database
+
+User->>API: POST /places/{id}/reviews
+API->>Facade: create_review(user_id, place_id, text)
+Facade->>Database: insert Review
+Database-->>Facade: review_id
+Facade-->>API: Review created
+API-->>User: 201 Created
+
+## Fetch List of Places
+sequenceDiagram
+participant User
+participant API
+participant Facade
+participant Database
+
+User->>API: GET /places (filters)
+API->>Facade: get_places(filters)
+Facade->>Database: query Places
+Database-->>Facade: places list
+Facade-->>API: formatted places
+API-->>User: 200 OK (places)
+
+## Explanatory Notes
+
+### User Registration
+This sequence diagram shows how a new user account is created. The request flows from the Presentation layer to the Business Logic layer through the facade, which handles validation and user creation before persisting the data.
+
+### Place Creation
+This diagram illustrates how an authenticated user creates a new place listing. The Business Logic layer ensures ownership rules before storing the place in the database.
+
+### Review Submission
+This sequence represents the process of submitting a review. The system validates the user and place before saving the review.
+
+### Fetching a List of Places
+This diagram shows how a user retrieves available places. Filters are passed through the facade, and the database returns matching results.
